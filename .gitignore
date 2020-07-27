@@ -2,6 +2,7 @@
 .gradle
 .idea
 .vscode
+device.json
 
 # Ignore Gradle build output directory
 build
