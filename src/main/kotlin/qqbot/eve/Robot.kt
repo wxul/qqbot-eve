@@ -6,7 +6,11 @@ import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.join
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.contact.Member
+import net.mamoe.mirai.contact.Friend
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.subscribeMessages
+
+//import net.mamoe.mirai.event.GroupMessageEvent
 
 class Robot constructor(var robotConfig: ConfigProperty) {
     var config: ConfigProperty = robotConfig
@@ -29,6 +33,8 @@ class Robot constructor(var robotConfig: ConfigProperty) {
     fun message() {
         // eve查价
         val eve_price_prefix = this.config.PREFIX + this.config.EVE_PRICE_SEARCH + " "
+        // roll点
+        val roll = this.config.PREFIX + this.config.ROLL + " "
         val market = Market()
         // 监听这个 bot 的来自所有群和好友的消息
         this.miraiBot.subscribeMessages {
@@ -98,8 +104,20 @@ class Robot constructor(var robotConfig: ConfigProperty) {
                 }
             }
 
+            startsWith(roll, removePrefix = true) {
+                when (subject) {
+                    is Group -> {
+                        println(subject.toString())
+                        reply("${this.senderName}掷出了${(0..100).random()}点(0-100)")
+                    }
+                }
+            }
+
             atBot {
-                reply("输入 ${eve_price_prefix} 三钛 查询价格")
+                val message: String = "使用帮助：\n" +
+                        "输入 ${eve_price_prefix} 三钛 查询价格\n" +
+                        "输入 ${roll} 进行无聊的roll点看人品"
+                reply(message)
             }
 
 //            "123" containsReply "你的消息里面包含 123"
