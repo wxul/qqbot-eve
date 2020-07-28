@@ -7,20 +7,6 @@ import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import java.text.DecimalFormat
 
-data class HttpGoodModel(val typeid: String = "",
-                         val typename: String = "")
-
-data class HttpGoodModelList(val results: List<HttpGoodModel>)
-
-data class HttpPriceItem(val max: Double = 0.0, val min: Double = 0.0, val volume: Long = 0)
-
-data class HttpPriceObject(val all: HttpPriceItem?, val buy: HttpPriceItem?, val sell: HttpPriceItem?)
-
-data class PriceItem(val name: String,
-                     var maxBuy: Double = 0.0,
-                     var minSell: Double = 0.0,
-                     var buyVolumn: Long = 0)
-
 class Market {
     val prefix: String = "https://www.ceve-market.org/api"
     val nameSearch: String = "/searchname"
@@ -28,10 +14,16 @@ class Market {
     val jitaId = "30000142"
     val marketSearch: String = "/market/region/{星域ID}/system/{星系ID}/type/{物品ID}.json"
 
+    /**
+     * 生成查询价格的url
+     */
     fun makeMarketUrl(id: String): String {
         return this.marketSearch.replace("{星域ID}", this.regionId).replace("{星系ID}", this.jitaId).replace("{物品ID}", id)
     }
 
+    /**
+     * 查询物品，返回json字符串
+     */
     fun searchName(name: String): String? {
         val url: String = this.prefix + this.nameSearch
         val (request, response, result) = url
@@ -48,6 +40,9 @@ class Market {
         }
     }
 
+    /**
+     * 查询物品，返回解析过的对象列表
+     */
     fun searchNameToObj(name: String): ArrayList<HttpGoodModel>? {
         val res = this.searchName(name)
         if (res == null) {
@@ -59,6 +54,9 @@ class Market {
         }
     }
 
+    /**
+     * 查询价格，返回json字符串
+     */
     fun searchPrice(id: String): String? {
         val url = this.prefix + this.makeMarketUrl(id)
         println(url)
@@ -74,6 +72,9 @@ class Market {
         }
     }
 
+    /**
+     * 查询价格，返回解析后的对象
+     */
     fun searchPriceToObject(id: String): HttpPriceObject? {
         val res: String? = this.searchPrice(id)
         if (res == null) {
@@ -85,6 +86,9 @@ class Market {
         }
     }
 
+    /**
+     * 查询多个物品的价格
+     */
     fun searchPrices(goods: ArrayList<HttpGoodModel>): ArrayList<PriceItem> {
         var prices: ArrayList<PriceItem> = ArrayList<PriceItem>()
         for (good in goods) {
@@ -96,6 +100,9 @@ class Market {
         return prices
     }
 
+    /**
+     * 格式化价格结果
+     */
     fun formatMessage(prices: ArrayList<PriceItem>): String? {
         if (prices.size == 0) return null
         var str = "名称\t\t最低出售\t\t最高收购\t\t收单数\r\n"
@@ -106,6 +113,9 @@ class Market {
         return str
     }
 
+    /**
+     * 封装的完整的查询物品方法
+     */
     fun query(name: String): String? {
         var res = this.searchNameToObj(name)
         if (res == null) {
