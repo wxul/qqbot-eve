@@ -3,23 +3,10 @@
  */
 package qqbot.eve
 
-import java.io.File
 import kotlinx.coroutines.*
-import net.mamoe.mirai.Bot
-import net.mamoe.mirai.alsoLogin
-import net.mamoe.mirai.join
-import net.mamoe.mirai.message.data.At
-import net.mamoe.mirai.contact.Member
-import net.mamoe.mirai.event.subscribeMessages
-import com.natpryce.konfig.*
 
 suspend fun main() {
-    val qqid = Key("QQID", longType)
-    val qqpwd = Key("QQPWD", stringType)
-    val botPrefix = Key("PREFIX", stringType)
 
-    val config = ConfigurationProperties.fromFile(File("private.properties"))
-    val botConfig = ConfigurationProperties.fromFile(File("gradle.properties"))
-    Robot(id = config[qqid], pwd = config[qqpwd], prefix = botConfig[botPrefix]).listen()
+    Robot(RobotConfig().config).listen()
 
 }

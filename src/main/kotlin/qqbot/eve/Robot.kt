@@ -8,18 +8,16 @@ import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.event.subscribeMessages
 
-class Robot constructor(id: Long, pwd: String, prefix: String = ".x") {
-    var id: Long = id
-    var pwd: String = pwd
-    var prefix: String = prefix
-    var miraiBot: Bot = Bot(this.id, this.pwd) {
+class Robot constructor(var robotConfig: ConfigProperty) {
+    var config: ConfigProperty = robotConfig
+    var miraiBot: Bot = Bot(this.config.QQID, this.config.QQPWD) {
         // 覆盖默认的配置
         fileBasedDeviceInfo("device.json") // 使用 "device.json" 保存设备信息
         // networkLoggerSupplier = { SilentLogger } // 禁用网络层输出
     }
 
     init {
-        println("user id: ${id}")
+        println("user id: ${this.config.QQID}")
     }
 
     suspend fun listen() {
@@ -29,7 +27,8 @@ class Robot constructor(id: Long, pwd: String, prefix: String = ".x") {
     }
 
     fun message() {
-        val prefix = this.prefix + " "
+        // eve查价
+        val eve_price_prefix = this.config.PREFIX + this.config.EVE_PRICE_SEARCH + " "
         val market = Market()
         // 监听这个 bot 的来自所有群和好友的消息
         this.miraiBot.subscribeMessages {
@@ -86,7 +85,7 @@ class Robot constructor(id: Long, pwd: String, prefix: String = ".x") {
 //                println(message.toString())
 //            }
 
-            startsWith(prefix, removePrefix = true) {
+            startsWith(eve_price_prefix, removePrefix = true) {
                 // it: 删除了消息前缀 "我是" 后的消息
                 // 如一条消息为 "我是张三", 则此时的 it 为 "张三".
 
@@ -100,7 +99,7 @@ class Robot constructor(id: Long, pwd: String, prefix: String = ".x") {
             }
 
             atBot {
-                reply("输入 ${prefix} 三钛 查询价格")
+                reply("输入 ${eve_price_prefix} 三钛 查询价格")
             }
 
 //            "123" containsReply "你的消息里面包含 123"
