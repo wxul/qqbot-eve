@@ -7,7 +7,8 @@ data class ConfigProperty(var QQID: Long = 0,
                           var QQPWD: String = "",
                           var PREFIX: String = "?",
                           var EVE_PRICE_SEARCH: String = "s",
-                          var ROLL: String = "r")
+                          var ROLL: String = "r",
+                          var IMAGE: String = "i")
 
 /**
  * 配置
@@ -21,6 +22,7 @@ class RobotConfig {
         val botPrefix = Key("PREFIX", stringType)
         val eve_price = Key("EVE_PRICE_SEARCH", stringType)
         val roll = Key("ROLL", stringType)
+        val img = Key("IMAGE", stringType)
 
         val config = ConfigurationProperties.fromFile(File("private.properties"))
         val botConfig = ConfigurationProperties.fromFile(File("gradle.properties"))
@@ -30,7 +32,8 @@ class RobotConfig {
                 QQPWD = config[qqpwd],
                 PREFIX = botConfig[botPrefix],
                 EVE_PRICE_SEARCH = botConfig[eve_price],
-                ROLL = botConfig[roll]
+                ROLL = botConfig[roll],
+                IMAGE = botConfig[img]
         )
 
         println(this.config.toString())

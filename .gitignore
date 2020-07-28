@@ -7,3 +7,5 @@ device.json
 # Ignore Gradle build output directory
 build
 private.properties
+temp/*
+!temp/.gitkeep

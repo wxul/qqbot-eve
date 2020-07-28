@@ -1,6 +1,7 @@
 package qqbot.eve
 
 import kotlinx.coroutines.*
+import java.io.File
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.join
@@ -9,6 +10,7 @@ import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.contact.Friend
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.subscribeMessages
+import net.mamoe.mirai.message.sendAsImageTo
 
 //import net.mamoe.mirai.event.GroupMessageEvent
 
@@ -35,7 +37,11 @@ class Robot constructor(var robotConfig: ConfigProperty) {
         val eve_price_prefix = this.config.PREFIX + this.config.EVE_PRICE_SEARCH + " "
         // roll点
         val roll = this.config.PREFIX + this.config.ROLL + " "
+        // img
+        val img = this.config.PREFIX + this.config.IMAGE + " "
+
         val market = Market()
+        val imgSrv = ImageService()
         // 监听这个 bot 的来自所有群和好友的消息
         this.miraiBot.subscribeMessages {
             // 当接收到消息 == "你好" 时就回复 "你好!"
@@ -111,6 +117,23 @@ class Robot constructor(var robotConfig: ConfigProperty) {
                         reply("${this.senderName}掷出了${(0..100).random()}点(0-100)")
                     }
                 }
+            }
+
+            startsWith(img, removePrefix = true) {
+//                println(imgSrv.url1)
+//                println(it)
+                if ("来点涩图".equals(it)) {
+                    imgSrv.downloadImage(imgSrv.url1)
+                    val f = File(imgSrv.tempImgSrc)
+                    if (f.exists()) {
+                        f.sendAsImageTo(subject)
+                        imgSrv.removeTemp()
+                    }
+
+                } else if ("来点二次元涩图".equals(it)) {
+                    imgSrv.downloadImage(imgSrv.url2)
+                }
+
             }
 
             atBot {
