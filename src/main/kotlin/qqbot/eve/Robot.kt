@@ -130,8 +130,13 @@ class Robot constructor(var robotConfig: ConfigProperty) {
                         imgSrv.removeTemp()
                     }
 
-                } else if ("来点二次元涩图".equals(it)) {
-                    imgSrv.downloadImage(imgSrv.url2)
+                } else if ("来点二次元".equals(it)) {
+                    imgSrv.downloadImage(imgSrv.url2 + "?" + (0..10000).random())
+                    val f = File(imgSrv.tempImgSrc)
+                    if (f.exists()) {
+                        f.sendAsImageTo(subject)
+                        imgSrv.removeTemp()
+                    }
                 }
 
             }
