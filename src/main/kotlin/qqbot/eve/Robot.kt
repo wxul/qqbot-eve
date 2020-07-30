@@ -131,11 +131,20 @@ class Robot constructor(var robotConfig: ConfigProperty) {
                     }
 
                 } else if ("来点二次元".equals(it)) {
-                    imgSrv.downloadImage(imgSrv.url2 + "?" + (0..10000).random())
-                    val f = File(imgSrv.tempImgSrc)
-                    if (f.exists()) {
-                        f.sendAsImageTo(subject)
-                        imgSrv.removeTemp()
+//                    imgSrv.downloadImage(imgSrv.url2 + "&" + (0..10000).random())
+//                    val f = File(imgSrv.tempImgSrc)
+//                    if (f.exists()) {
+//                        f.sendAsImageTo(subject)
+//                        imgSrv.removeTemp()
+//                    }
+                    val img = imgSrv.getImageApi()
+                    if (img != null) {
+                        imgSrv.downloadImage(img.imgurl)
+                        val f = File(imgSrv.tempImgSrc)
+                        if (f.exists()) {
+                            f.sendAsImageTo(subject)
+                            imgSrv.removeTemp()
+                        }
                     }
                 }
 

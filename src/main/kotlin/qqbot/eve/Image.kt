@@ -12,11 +12,12 @@ import com.github.kittinunf.result.Result
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 
-data class HttpImgModel(val code: String = "", val acgurl: String = "", val width: String = "", val height: String = "")
+data class HttpImgModel(val code: String = "", val imgurl: String = "", val width: String = "", val height: String = "")
 
 class ImageService {
     val url1: String = "https://api.66mz8.com/api/rand.tbimg.php?format=png"
-    val url2: String = "https://random.52ecy.cn/randbg.php"
+    val url2: String = "https://random.52ecy.cn/randbg.php?type=json&style=3&total=1"
+    val url3: String = "http://www.dmoe.cc/random.php?return=json"
 
     val tempImgSrc: String = "./temp/img1.png"
 
@@ -54,7 +55,7 @@ class ImageService {
     }
 
     fun getImageApi(): HttpImgModel? {
-        val res = this.getImageApiString(this.url2)
+        val res = this.getImageApiString(this.url3 + "&" + (0..10000).random())
         println(res)
         if (res == null) {
             return null
